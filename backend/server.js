@@ -16,6 +16,9 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.log(err));
 
 app.use("/api/payment", require("./routes/payment.routes"));
+app.use("/api/orders", require("./routes/order.routes"));
+app.use("/api/products", require("./routes/product.routes"));
+app.use("/api/auth", require("./routes/auth.routes"));
 
 app.listen(5000, () => {
     console.log("Server rinning on 5000");
