@@ -1,6 +1,6 @@
 const crypto = require("crypto");
-const Product = require("../models/Product");
-const Order = require("../models/Order");
+const Product = require("../../models/Product");
+const Order = require("../../models/Order");
 
 // In-memory session store
 const sessions = new Map();
@@ -11,7 +11,7 @@ const sessions = new Map();
  */
 exports.createCheckout = async (req, res) => {
   try {
-    const { items } = req.body;
+    const { items, address } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ message: "Items are required" });
@@ -36,6 +36,7 @@ exports.createCheckout = async (req, res) => {
       items,
       totalAmount,
       user: req.user._id, // attach logged-in user
+      address,
       createdAt: Date.now()
     });
 
@@ -56,7 +57,9 @@ exports.createCheckout = async (req, res) => {
  */
 exports.fakeWebhook = async (payload) => {
   try {
-    const { items, totalAmount, paymentId, sessionId, user } = payload.data;
+    const { items, totalAmount, paymentId, sessionId, user, address } = payload.data;
+
+    const session = sessions.get(sessionId);
 
     if (!user) {
       console.log("Cannot create order: user is undefined");
@@ -75,7 +78,8 @@ exports.fakeWebhook = async (payload) => {
       paymentIntentId: paymentId,
       paymentStatus: "paid",
       gateway: "fake",
-      sessionId
+      sessionId,
+      shippingAddress: session.address
     });
 
     // deduct stock for each item

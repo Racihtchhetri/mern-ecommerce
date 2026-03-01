@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -34,5 +34,12 @@ exports.login = async (req, res) => {
         { expiresIn: "7d" }
     );
 
-    res.json({ token });
+    res.json({
+        token,
+        user: {
+            _id: user._id,
+            name: user.name,
+            email: user.email
+        }
+    });
 };

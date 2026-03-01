@@ -15,10 +15,10 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Mongo connected"))
     .catch(err => console.log(err));
 
-app.use("/api/payment", require("./routes/payment.routes"));
-app.use("/api/orders", require("./routes/order.routes"));
-app.use("/api/products", require("./routes/product.routes"));
-app.use("/api/auth", require("./routes/auth.routes"));
+app.use("/api/payment", require("./routes/users/payment.routes"));
+app.use("/api/orders", require("./routes/users/order.routes"));
+app.use("/api/products", require("./routes/users/product.routes"));
+app.use("/api/auth", require("./routes/users/auth.routes"));
 
 app.listen(5000, () => {
     console.log("Server rinning on 5000");
