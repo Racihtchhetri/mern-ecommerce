@@ -29,7 +29,6 @@ export default function PlaceOrder() {
                     <p><strong>Payment Status:</strong> {order.paymentStatus}</p>
                     <p><strong>Order Status:</strong> {order.orderStatus}</p>
                     <p><strong>Total Amount:</strong> ₹{order.totalAmount}</p>
-
                     {/* <p>
                         <strong>Payment Link:</strong>{" "}
                         <a href={payUrl} target="_blank" rel="noreferrer">
@@ -46,15 +45,49 @@ export default function PlaceOrder() {
                 <div className="card-body">
 
                     {order.items.map((item, i) => (
-                        <div key={i} className="d-flex justify-content-between mb-2">
-                            <div>
-                                {item.product}
-                                <div className="text-muted small">
-                                    {item.size} / {item.color} × {item.qty}
+
+                        <div
+                            key={i}
+                            className="d-flex align-items-center mb-3"
+                        >
+
+                            {/* Product Image */}
+                            <img
+                                src={item.image}
+                                alt={item.name}
+                                style={{
+                                    width: "60px",
+                                    height: "60px",
+                                    objectFit: "cover",
+                                    marginRight: "10px",
+                                    borderRadius: "6px"
+                                }}
+                            />
+
+                            {/* Product Details */}
+                            <div className="flex-grow-1">
+
+                                <div className="fw-semibold">
+                                    {item.name || item.product}
                                 </div>
+
+                                <div className="text-muted small">
+                                    Size: {item.size} | Color: {item.color}
+                                </div>
+
+                                <div className="text-muted small">
+                                    ₹{item.price} × {item.qty}
+                                </div>
+
                             </div>
-                            <div>₹{item.price * item.qty}</div>
+
+                            {/* Item Total */}
+                            <div className="fw-semibold">
+                                ₹{item.price * item.qty}
+                            </div>
+
                         </div>
+
                     ))}
 
                 </div>

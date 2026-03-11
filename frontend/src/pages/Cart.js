@@ -5,29 +5,45 @@ export default function Cart() {
 
   const [cart, setCart] = useState([]);
 
+  // Load cart
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(stored);
+    const storedCart = localStorage.getItem("cart");
+
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
   }, []);
 
+  // Update quantity
   const updateQty = (index, newQty) => {
+
     if (newQty < 1) return;
 
-    const updated = [...cart];
-    updated[index].qty = newQty;
+    const updatedCart = [...cart];
+    updatedCart[index].qty = newQty;
 
-    setCart(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
+  // Remove item
   const removeItem = (index) => {
-    const updated = cart.filter((_, i) => i !== index);
-    setCart(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
+
+    const updatedCart = cart.filter((_, i) => i !== index);
+
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  const total = cart.reduce(
+  // Total price
+  const totalPrice = cart.reduce(
     (sum, item) => sum + item.price * item.qty,
+    0
+  );
+
+  // Total quantity
+  const totalItems = cart.reduce(
+    (sum, item) => sum + item.qty,
     0
   );
 
@@ -35,8 +51,9 @@ export default function Cart() {
     return (
       <div className="container py-5 text-center">
         <h5>Your cart is empty</h5>
+
         <Link to="/" className="btn btn-outline-primary mt-3">
-          Continue shopping
+          Continue Shopping
         </Link>
       </div>
     );
@@ -49,34 +66,38 @@ export default function Cart() {
 
       <div className="row">
 
-        {/* LEFT : ITEMS */}
+        {/* LEFT ITEMS */}
         <div className="col-md-8">
 
           {cart.map((item, index) => (
 
-            <div
-              key={index}
-              className="card mb-3 border-0 shadow-sm"
-            >
+            <div key={index} className="card mb-3 border-0 shadow-sm">
+
               <div className="card-body">
 
                 <div className="row align-items-center">
 
+                  {/* IMAGE */}
                   <div className="col-3 col-md-2">
+
                     <img
                       src={item.image || "https://via.placeholder.com/120"}
                       className="img-fluid rounded"
-                      alt=""
+                      alt={item.name}
                     />
+
                   </div>
 
+                  {/* PRODUCT INFO */}
                   <div className="col-9 col-md-6">
 
                     <h6 className="mb-1">{item.name}</h6>
 
-                    {item.size && item.color && (
+                    {(item.size || item.color) && (
                       <div className="text-muted small mb-2">
-                        Size: {item.size} &nbsp;|&nbsp; Color: {item.color}
+                        {item.size && `Size: ${item.size}`} 
+                        {item.size && item.color && " | "}
+                        {item.color && `Color: ${item.color}`}
                       </div>
                     )}
 
@@ -89,6 +110,7 @@ export default function Cart() {
 
                   </div>
 
+                  {/* QTY */}
                   <div className="col-md-2 text-md-center mt-3 mt-md-0">
 
                     <div className="btn-group btn-group-sm">
@@ -97,10 +119,13 @@ export default function Cart() {
                         className="btn btn-outline-secondary"
                         onClick={() => updateQty(index, item.qty - 1)}
                       >
-                        −
+                        -
                       </button>
 
-                      <button className="btn btn-outline-secondary" disabled>
+                      <button
+                        className="btn btn-outline-secondary"
+                        disabled
+                      >
                         {item.qty}
                       </button>
 
@@ -115,6 +140,7 @@ export default function Cart() {
 
                   </div>
 
+                  {/* PRICE */}
                   <div className="col-md-2 text-end mt-3 mt-md-0">
 
                     <div className="fw-semibold">
@@ -130,43 +156,47 @@ export default function Cart() {
                 </div>
 
               </div>
+
             </div>
 
           ))}
 
         </div>
 
-        {/* RIGHT : SUMMARY */}
+        {/* RIGHT SUMMARY */}
         <div className="col-md-4">
 
           <div className="card border-0 shadow-sm">
+
             <div className="card-body">
 
               <h6 className="mb-3">Order Summary</h6>
 
               <div className="d-flex justify-content-between mb-2">
                 <span>Items</span>
-                <span>{cart.length}</span>
+                <span>{totalItems}</span>
               </div>
 
               <div className="d-flex justify-content-between mb-3">
                 <strong>Total</strong>
-                <strong>₹{total}</strong>
+                <strong>₹{totalPrice}</strong>
               </div>
 
               <Link
                 to="/checkout"
                 className="btn btn-warning w-100 fw-semibold"
               >
-                Proceed to checkout
+                Proceed to Checkout
               </Link>
 
             </div>
+
           </div>
 
         </div>
 
       </div>
+
     </div>
   );
 }

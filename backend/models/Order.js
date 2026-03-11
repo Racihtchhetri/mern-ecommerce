@@ -8,6 +8,14 @@ const orderItemSchema = new mongoose.Schema(
       required: true
     },
 
+    name: {
+      type: String
+    },
+
+    image: {
+      type: String
+    },
+
     size: {
       type: String,
       required: true

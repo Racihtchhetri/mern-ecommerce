@@ -43,6 +43,8 @@ export default function Checkout() {
             // Format items for backend
             const formattedItems = cart.map(item => ({
                 product: item.productId,
+                name: item.name,
+                image: item.image,
                 size: item.size,
                 color: item.color,
                 qty: item.qty,
@@ -203,18 +205,50 @@ export default function Checkout() {
                                 <p className="text-muted">Your cart is empty</p>
                             )}
 
-                            {cart.map((item) => (
+                            {cart.map((item, index) => (
+
                                 <div
-                                    key={item.productId}
-                                    className="d-flex justify-content-between mb-2"
+                                    key={index}
+                                    className="d-flex align-items-center mb-3"
                                 >
-                                    <div>
-                                        <div className="fw-semibold">{item.name}</div>
-                                        <small className="text-muted">Qty: {item.qty}</small>
+
+                                    {/* Product Image */}
+                                    <img
+                                        src={item.image || "https://via.placeholder.com/60"}
+                                        alt={item.name}
+                                        style={{
+                                            width: "60px",
+                                            height: "60px",
+                                            objectFit: "cover",
+                                            marginRight: "10px",
+                                            borderRadius: "6px"
+                                        }}
+                                    />
+
+                                    {/* Product Details */}
+                                    <div className="flex-grow-1">
+
+                                        <div className="fw-semibold">
+                                            {item.name}
+                                        </div>
+
+                                        <small className="text-muted">
+                                            Size: {item.size} | Color: {item.color}
+                                        </small>
+
+                                        <div className="text-muted small">
+                                            ₹{item.price} × {item.qty}
+                                        </div>
+
                                     </div>
 
-                                    <div>₹{item.price * item.qty}</div>
+                                    {/* Item Total */}
+                                    <div className="fw-semibold">
+                                        ₹{item.price * item.qty}
+                                    </div>
+
                                 </div>
+
                             ))}
 
                             <hr />

@@ -35,7 +35,7 @@ exports.createCheckout = async (req, res) => {
     sessions.set(sessionId, {
       items,
       totalAmount,
-      user: req.user._id, // attach logged-in user
+      user: req.user._id,
       address,
       createdAt: Date.now()
     });

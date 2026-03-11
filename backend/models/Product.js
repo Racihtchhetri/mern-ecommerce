@@ -1,54 +1,86 @@
 const mongoose = require("mongoose");
 
-const varientSchema = new mongoose.Schema({
+const variantSchema = new mongoose.Schema({
+
     size: {
         type: String,
         required: true
     },
+
     color: {
         type: String,
         required: true
     },
+
     stock: {
         type: Number,
-        required: true,
         default: 0
     },
+
     price: {
-        type: Number,
-    }
-}, { _id: false});
+        type: Number
+    },
+
+    sku: {
+        type: String,
+        unique: true
+    },
+
+    image: String
+
+}, { _id: false });
 
 const productSchema = new mongoose.Schema({
+
     name: {
         type: String,
         required: true
     },
 
-    discription: String,
+    description: String,
+
+    brand: String,
 
     category: {
         type: String,
-        enum: ["men", "women", "kids"],
         required: true
     },
 
-    subCategory: {
-        type: String
-    },
+    subCategory: String,
 
     basePrice: {
         type: Number,
         required: true
     },
 
-    images: [String],
+    images: {
+        main: String,
+        hover: String,
+        gallery: [String]
+    },
 
-    variants: [varientSchema],
+    variants: [variantSchema],
+
+    tags: [String],
+
+    totalStock: {
+        type: Number,
+        default: 0
+    },
+
+    rating: {
+        type: Number,
+        default: 0
+    },
 
     isActive: {
         type: Boolean,
         default: true
+    },
+
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"User"
     }
 
 }, { timestamps: true });

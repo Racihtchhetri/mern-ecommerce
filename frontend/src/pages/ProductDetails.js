@@ -25,6 +25,12 @@ export default function ProductDetails() {
   const sizes = [...new Set(variants.map(v => v.size))];
   const colors = [...new Set(variants.map(v => v.color))];
 
+  // Selected Variant
+  const selectedVariant = variants.find(
+    v => v.size === selectedSize && v.color === selectedColor
+  );
+
+  // Check stock availability
   const isVariantAvailable = (size, color) => {
     return variants.some(v =>
       (!size || v.size === size) &&
@@ -33,65 +39,94 @@ export default function ProductDetails() {
     );
   };
 
-  const addToCart = () => {
+  // Variant price
+  const price = selectedVariant?.price || product.basePrice;
 
-    if (!selectedSize || !selectedColor) {
-      alert("Please select size and color");
-      return;
-    }
+  // Variant image
+  const image =
+    selectedVariant?.image
+      ? `http://localhost:5000/uploads/${selectedVariant.image}`
+      : product.images?.gallery?.length
+      ? `http://localhost:5000/uploads/${product.images.gallery[0]}`
+      : "https://via.placeholder.com/400x300";
 
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const addToCart = () => {
 
-    const item = {
-      productId: product._id,
-      name: product.name,
-      price: product.basePrice,
-      qty,
-      size: selectedSize,
-      color: selectedColor,
-      image: product.images?.[0] || null
-    };
+  if (!selectedSize || !selectedColor) {
+    alert("Please select size and color");
+    return;
+  }
 
-    const exist = cart.find(
-      i =>
-        i.productId === product._id &&
-        i.size === selectedSize &&
-        i.color === selectedColor
-    );
+  const variant = variants.find(
+    v => v.size === selectedSize && v.color === selectedColor
+  );
 
-    if (exist) exist.qty += qty;
-    else cart.push(item);
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart");
+  const item = {
+    productId: product._id,
+    name: product.name,
+    price: variant?.price || product.basePrice,
+    qty,
+    size: selectedSize,
+    color: selectedColor,
+    image: variant?.image
+      ? `http://localhost:5000/uploads/${variant.image}`
+      : `http://localhost:5000/uploads/${product.images?.gallery?.[0]}`
   };
+
+  const exist = cart.find(
+    i =>
+      i.productId === product._id &&
+      i.size === selectedSize &&
+      i.color === selectedColor
+  );
+
+  if (exist) exist.qty += qty;
+  else cart.push(item);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert("Added to cart");
+};
 
   return (
     <div className="container py-4">
 
       <div className="row">
 
-        <div className="col-md-5">
+        {/* IMAGE */}
+        <div className="col-md-5 text-center">
+
           <img
-            src={product.images?.[0] || "https://via.placeholder.com/400x300"}
-            className="img-fluid"
+            src={image}
+            className="img-fluid w-75 rounded shadow-sm"
             alt={product.name}
           />
+
         </div>
 
+        {/* DETAILS */}
         <div className="col-md-7">
 
           <h3>{product.name}</h3>
-          <p className="text-muted">{product.category}</p>
 
-          <h5 className="mb-3">₹{product.basePrice}</h5>
+          <p className="text-muted">
+            {product.category} / {product.subCategory}
+          </p>
 
-          {/* ===== Size buttons ===== */}
+          <h5 className="mb-3">₹{price}</h5>
+
+          {/* SIZE */}
           <div className="mb-3">
             <strong>Size</strong>
+
             <div className="d-flex flex-wrap gap-2 mt-2">
+
               {sizes.map(s => {
+
                 const disabled = !isVariantAvailable(s, selectedColor);
+
                 return (
                   <button
                     key={s}
@@ -102,21 +137,29 @@ export default function ProductDetails() {
                         ? "btn-dark"
                         : "btn-outline-dark"
                     }`}
-                    onClick={() => setSelectedSize(s)}
+                    onClick={() => 
+                      setSelectedSize(prev => (prev === s ? "" : s))
+                    }
                   >
                     {s}
                   </button>
                 );
               })}
+
             </div>
           </div>
 
-          {/* ===== Color buttons ===== */}
+          {/* COLOR */}
           <div className="mb-3">
+
             <strong>Color</strong>
+
             <div className="d-flex flex-wrap gap-2 mt-2">
+
               {colors.map(c => {
+
                 const disabled = !isVariantAvailable(selectedSize, c);
+
                 return (
                   <button
                     key={c}
@@ -127,20 +170,25 @@ export default function ProductDetails() {
                         ? "btn-primary"
                         : "btn-outline-primary"
                     }`}
-                    onClick={() => setSelectedColor(c)}
+                    onClick={() => 
+                      setSelectedColor(prev => (prev === c ? "" : c))
+                    }
                   >
                     {c}
                   </button>
                 );
               })}
+
             </div>
           </div>
 
-          {/* ===== Quantity (Amazon style) ===== */}
+          {/* QUANTITY */}
           <div className="mb-4">
+
             <strong>Quantity</strong>
 
             <div className="d-flex align-items-center gap-2 mt-2">
+
               <button
                 className="btn btn-outline-secondary"
                 onClick={() => setQty(q => Math.max(1, q - 1))}
@@ -158,18 +206,22 @@ export default function ProductDetails() {
               >
                 +
               </button>
+
             </div>
+
           </div>
 
           <button
             className="btn btn-warning"
             onClick={addToCart}
           >
-            Add to cart
+            Add to Cart
           </button>
 
         </div>
+
       </div>
+
     </div>
   );
 }
