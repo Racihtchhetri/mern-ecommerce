@@ -12,6 +12,6 @@ router.get("/:id", auth, isAdmin, controller.getOrderById);
 
 router.put("/:id", auth, isAdmin, controller.updateOrder);
 
-router.delete("/id", auth, isAdmin, controller.deleteOrder);
+router.delete("/:id", auth, isAdmin, controller.deleteOrder);
 
 module.exports = router;

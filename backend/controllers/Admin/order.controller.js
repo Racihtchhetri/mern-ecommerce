@@ -32,14 +32,29 @@ exports.getOrderById = async (req, res) => {
 exports.updateOrder = async (req, res) => {
     try {
 
-        const order = await Order.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true }
-        );
+        const order = await Order.findById(req.params.id);
 
-        res.json(order);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        if (req.body.orderStatus) {
+            order.orderStatus = req.body.orderStatus;
+        }
+
+        if (req.body.paymentStatus) {
+            order.paymentStatus = req.body.paymentStatus;
+        }
+
+        await order.save();
+
+        const updateOrder = await Order.findById(order._id)
+        .populate("user", "name email");
+
+        res.json(updateOrder);
+
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Failed to update order" });
     }
 };

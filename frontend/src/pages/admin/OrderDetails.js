@@ -18,9 +18,13 @@ export default function OrderDetails() {
     }, [id]);
 
     const updateStatus = async (status) => {
-        await API.put(`/admin/orders/${id}`, { status });
-        setOrder({ ...order, paymentStatus: status });
-        alert("Status Updated");
+        const res = await API.put(`/admin/orders/${id}`, {
+            orderStatus: status
+        });
+
+        setOrder(res.data);
+
+        alert("Order Status Update");
     };
 
     const deleteOrder = async () => {
@@ -82,7 +86,7 @@ export default function OrderDetails() {
                     </span>
                 </p>
                 <p><b>Order Status:</b>
-                <span style={{
+                    <span style={{
                         marginLeft: 10,
                         padding: "4px 10px",
                         borderRadius: 20,
@@ -119,6 +123,7 @@ export default function OrderDetails() {
                 >
                     <thead style={{ background: "#2f3640", color: "white" }}>
                         <tr>
+                            <th style={{ padding: 10 }}>Image</th>
                             <th style={{ padding: 10 }}>Product</th>
                             <th style={{ padding: 10 }}>Price</th>
                             <th style={{ padding: 10 }}>Qty</th>
@@ -128,6 +133,14 @@ export default function OrderDetails() {
                     <tbody>
                         {order.items.map((item, i) => (
                             <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
+                                <td style={{ padding: 10 }}>
+                                    <img
+                                        src={item.image || "https://via.placeholder.com/120"}
+                                        className="rounded"
+                                        style={{ maxWidth: 70 }}
+                                        alt={item.name}
+                                    />
+                                </td>
                                 <td style={{ padding: 10 }}>{item.name}</td>
                                 <td style={{ padding: 10 }}>₹{item.price}</td>
                                 <td style={{ padding: 10 }}>{item.qty}</td>
@@ -151,7 +164,7 @@ export default function OrderDetails() {
                 <h3>⚙ Update Order Status</h3>
 
                 <select
-                    value={order.paymentStatus}
+                    value={order.orderStatus}
                     onChange={(e) => updateStatus(e.target.value)}
                     style={{
                         padding: 10,
@@ -160,11 +173,11 @@ export default function OrderDetails() {
                         border: "1px solid #ccc"
                     }}
                 >
-                    <option>Placed</option>
-                    <option>Packed</option>
-                    <option>Shipped</option>
-                    <option>Delivered</option>
-                    <option>Cancelled</option>
+                    <option value="placed">Placed</option>
+                    <option value="packed">Packed</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
                 </select>
 
                 <br /><br />

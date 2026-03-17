@@ -146,7 +146,7 @@ export default function Orders() {
             </table>
 
             <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 10 }}>
-                <button onClick={handlePrev} disabled={page === 1}>
+                <button className="btn btn-warning" onClick={handlePrev} disabled={page === 1}>
                     Previous
                 </button>
 
@@ -154,7 +154,7 @@ export default function Orders() {
                     Page {page} of {totalPages || 1}
                 </span>
 
-                <button onClick={handleNext} disabled={page === totalPages || totalPages === 0}>
+                <button className="btn btn-primary" onClick={handleNext} disabled={page === totalPages || totalPages === 0}>
                     Next
                 </button>
             </div>

@@ -47,48 +47,48 @@ export default function ProductDetails() {
     selectedVariant?.image
       ? `http://localhost:5000/uploads/${selectedVariant.image}`
       : product.images?.gallery?.length
-      ? `http://localhost:5000/uploads/${product.images.gallery[0]}`
-      : "https://via.placeholder.com/400x300";
+        ? `http://localhost:5000/uploads/${product.images.gallery[0]}`
+        : "https://via.placeholder.com/400x300";
 
-const addToCart = () => {
+  const addToCart = () => {
 
-  if (!selectedSize || !selectedColor) {
-    alert("Please select size and color");
-    return;
-  }
+    if (!selectedSize || !selectedColor) {
+      alert("Please select size and color");
+      return;
+    }
 
-  const variant = variants.find(
-    v => v.size === selectedSize && v.color === selectedColor
-  );
+    const variant = variants.find(
+      v => v.size === selectedSize && v.color === selectedColor
+    );
 
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  const item = {
-    productId: product._id,
-    name: product.name,
-    price: variant?.price || product.basePrice,
-    qty,
-    size: selectedSize,
-    color: selectedColor,
-    image: variant?.image
-      ? `http://localhost:5000/uploads/${variant.image}`
-      : `http://localhost:5000/uploads/${product.images?.gallery?.[0]}`
+    const item = {
+      productId: product._id,
+      name: product.name,
+      price: variant?.price || product.basePrice,
+      qty,
+      size: selectedSize,
+      color: selectedColor,
+      image: variant?.image
+        ? `http://localhost:5000/uploads/${variant.image}`
+        : `http://localhost:5000/uploads/${product.images?.gallery?.[0]}`
+    };
+
+    const exist = cart.find(
+      i =>
+        i.productId === product._id &&
+        i.size === selectedSize &&
+        i.color === selectedColor
+    );
+
+    if (exist) exist.qty += qty;
+    else cart.push(item);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    alert("Added to cart");
   };
-
-  const exist = cart.find(
-    i =>
-      i.productId === product._id &&
-      i.size === selectedSize &&
-      i.color === selectedColor
-  );
-
-  if (exist) exist.qty += qty;
-  else cart.push(item);
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  alert("Added to cart");
-};
 
   return (
     <div className="container py-4">
@@ -132,12 +132,11 @@ const addToCart = () => {
                     key={s}
                     type="button"
                     disabled={disabled}
-                    className={`btn btn-sm ${
-                      selectedSize === s
+                    className={`btn btn-sm ${selectedSize === s
                         ? "btn-dark"
                         : "btn-outline-dark"
-                    }`}
-                    onClick={() => 
+                      }`}
+                    onClick={() =>
                       setSelectedSize(prev => (prev === s ? "" : s))
                     }
                   >
@@ -165,12 +164,11 @@ const addToCart = () => {
                     key={c}
                     type="button"
                     disabled={disabled}
-                    className={`btn btn-sm ${
-                      selectedColor === c
+                    className={`btn btn-sm ${selectedColor === c
                         ? "btn-primary"
                         : "btn-outline-primary"
-                    }`}
-                    onClick={() => 
+                      }`}
+                    onClick={() =>
                       setSelectedColor(prev => (prev === c ? "" : c))
                     }
                   >
@@ -206,6 +204,20 @@ const addToCart = () => {
               >
                 +
               </button>
+
+            </div>
+
+          </div>
+
+          { /* Description */}
+
+          <div className="mb-4">
+
+            <strong>Description</strong>
+
+            <div className="d-flex align-items-center gap-2 mt-2">
+
+              <p> {product.description} </p>
 
             </div>
 

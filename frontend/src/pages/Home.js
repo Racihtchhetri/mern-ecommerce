@@ -246,8 +246,8 @@ export default function Home() {
               const image =
                 p.variants?.[0]?.image
                 ? `http://localhost:5000/uploads/${p.variants[0].image}`
-                : p.images?.gallary?.[0]
-                ? `http://localhost:5000/uploads/${p.images.gallary[0]}`
+                : p.images?.gallery?.[0]
+                ? `http://localhost:5000/uploads/${p.images.gallery[0]}`
                 : `https://via.placeholder.com/300x200.png?text=No+Image`;
 
               return (

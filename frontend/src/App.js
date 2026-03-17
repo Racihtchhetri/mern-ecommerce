@@ -51,6 +51,7 @@ function Layout() {
           }
         >
 
+          <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="orders" element={<AdminOrder />} />
           <Route path="orders/:id" element={<AdminOrderDetails />} />

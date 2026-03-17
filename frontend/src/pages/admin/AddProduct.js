@@ -272,13 +272,7 @@ export default function AddProduct() {
               </div>
 
               <div className="col-md-2">
-                <input
-                  className="form-control"
-                  placeholder="SKU"
-                  name="sku"
-                  value={variant.sku}
-                  onChange={handleVariantChange}
-                />
+
               </div>
 
               <div className="col-md-2">

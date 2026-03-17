@@ -5,6 +5,7 @@ const cors = require("cors");
 const path = require("path");
 
 const adminProductRoutes = require("./routes/Admin/product.routes");
+const adminRoutes = require("./routes/Admin/adminRoutes");
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.use("/api/auth", require("./routes/users/auth.routes"));
 app.use("/api/admin/orders", require("./routes/admin/order.routes"));
 app.use("/api/admin/products", adminProductRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use("/api/admin", adminRoutes);
 
 app.listen(5000, () => {
     console.log("Server rinning on 5000");
